@@ -22,13 +22,7 @@
 * 变换矩阵（4X4）:`Eigen::Isometry3d`
 **具体使用方法:[CSDN](https://blog.csdn.net/u011092188/article/details/77430988)**
 
+#### [雅克比矩阵](https://blog.csdn.net/qq_22121229/article/details/83822731#commentBox)
 
-
-
-
-
-
-
-
-
+#### [矩阵微分](https://blog.csdn.net/xfijun/article/details/104168293)
 
