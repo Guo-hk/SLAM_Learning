@@ -1,0 +1,93 @@
+# 奇异值分解（SVD）及其在线性最小二乘解Ax=b上的应用
+
+## 奇异值分解（SVD Decomposition）定义
+
+对于任意矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A%5Cin+R%5E%7Bm%5Ctimes+n%7D) ，存在正交矩阵 ![[公式]](https://www.zhihu.com/equation?tex=U%5Cin+R%5E%7Bm%5Ctimes+m%7D) ，![[公式]](https://www.zhihu.com/equation?tex=V%5Cin+R%5E%7Bn%5Ctimes+n%7D) ，以及对角矩阵 ![[公式]](https://www.zhihu.com/equation?tex=%5CSigma+%5Cin+R%5E%7Bm%5Ctimes+n%7D) ：
+
+<img src="https://pic2.zhimg.com/v2-cc245b909dee89d755fe477165db87ed_r.jpg" alt="preview" style="zoom:80%;" />
+
+或
+
+<img src="https://pic4.zhimg.com/v2-64dbc2d9bbedaca5ecba2cf2289e043b_r.jpg" alt="preview" style="zoom:80%;" />
+
+其中，对角线元素满足：![[公式]](https://www.zhihu.com/equation?tex=%5Csigma_1%5Cgeq%5Ccdots%5Cgeq%5Csigma_r%5Cgeq%5Csigma_%7Br%2B1%7D%3D%5Ccdots%3D%5Csigma_%7B%5Cmin%28m%2Cn%29%7D%3D0) ，使得， ![[公式]](https://www.zhihu.com/equation?tex=A%3DU%5CSigma+V%5ET) 。
+
+此分解叫做矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A) 的奇异值分解（Singular Value Decomposition），是一个非常重要的矩阵分解，对角矩阵 ![[公式]](https://www.zhihu.com/equation?tex=+%5CSigma) 的对角线元素 ![[公式]](https://www.zhihu.com/equation?tex=%5Csigma_i) 叫做矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A) 的奇异值。矩阵 ![[公式]](https://www.zhihu.com/equation?tex=U) 的列向量成为左奇异向量，矩阵 ![[公式]](https://www.zhihu.com/equation?tex=V) 的列向量成为右奇异向量。
+
+使用正交矩阵 ![[公式]](https://www.zhihu.com/equation?tex=V) ，可得到以下公式：![[公式]](https://www.zhihu.com/equation?tex=AV%3DU%5CSigma) 
+
+这可解释为，存在一组特殊的正交向量集（例如 ![[公式]](https://www.zhihu.com/equation?tex=V) 的列向量集），通过矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A) 映射到另一组正交向量集（例如 ![[公式]](https://www.zhihu.com/equation?tex=U) 的列向量集)。
+
+## SVD的一些特性
+
+给定矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A) 的一组SVD分解：  ![[公式]](https://www.zhihu.com/equation?tex=A%3DU%5CSigma+V%5ET) 
+
+其中， ![[公式]](https://www.zhihu.com/equation?tex=%5Csigma_1%5Cgeq%5Ccdots%5Cgeq%5Csigma_r%5Cgeq%5Csigma_%7Br%2B1%7D%3D%5Ccdots%3D%5Csigma_%7B%5Cmin%28m%2Cn%29%7D%3D0) 
+
+存在以下推论（ ![[公式]](https://www.zhihu.com/equation?tex=R%28A%29) 和 ![[公式]](https://www.zhihu.com/equation?tex=N%28A%29) 分别为矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A) 的值域空间和零空间）：
+
+- ![[公式]](https://www.zhihu.com/equation?tex=rank%28A%29%3Dr) 
+- ![[公式]](https://www.zhihu.com/equation?tex=R%28A%29%3DR%28%5Bu_1%2C...u_r%5D%29) 
+- ![[公式]](https://www.zhihu.com/equation?tex=N%28A%29%3DR%28%5Bu_%7Br%2B1%7D%2C...%2Cu_n%5D%29) 
+- ![[公式]](https://www.zhihu.com/equation?tex=R%28A%5ET%29%3DR%28%5Bv_1%2C...v_r%5D%29) 
+- ![[公式]](https://www.zhihu.com/equation?tex=N%28A%5ET%29%3DR%28%5Bv_%7Br%2B1%7D%2C...%2Cv_m%5D%29) 
+
+如果我们引入
+
+![[公式]](https://www.zhihu.com/equation?tex=U_r%3D%5Bu_1%2C...%2Cu_r%5D%2C%5CSigma%3Ddiag%28%5Csigma_1%2C...%2C%5Csigma_r%29%2CV_r%3D%5Bv_1%2C...%2Cv_r%5D) 
+
+则有
+
+![[公式]](https://www.zhihu.com/equation?tex=A%3DU_r%5CSigma_rV_r%5ET%3D%5Csum_%7Bi%3D1%7D%5Er%5Csigma_iu_iv_i%5ET) 
+
+这称为矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A) 的二进制分解（dyadic decomposition），即将秩为 ![[公式]](https://www.zhihu.com/equation?tex=r) 的矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A) 分解为 ![[公式]](https://www.zhihu.com/equation?tex=r) 个秩为1的矩阵之和。
+
+同时，可以得到
+
+![[公式]](https://www.zhihu.com/equation?tex=A%5ETA%3DV%5CSigma%5ET%5CSigma+V%5ET+and+AA%5ET%3DU%5CSigma%5CSigma%5ETU%5ET) 
+
+可知，奇异值的平方 ![[公式]](https://www.zhihu.com/equation?tex=%5Csigma_i%5E2%2Ci%3D1%2C...%2Cp) 是对称矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A%5ETA) 和 ![[公式]](https://www.zhihu.com/equation?tex=AA%5ET) 的特征值， ![[公式]](https://www.zhihu.com/equation?tex=v_i) 和 ![[公式]](https://www.zhihu.com/equation?tex=u_i) 分别是对应的特征向量。 证明如下图：
+
+<img src="https://pic1.zhimg.com/v2-efbb1a9e68c3929b52ea95460da6beec_r.jpg" alt="preview" style="zoom:80%;" />
+
+## SVD求解线性最小二乘问题Ax=b
+
+我们再来看SVD的经典应用：**解线性方程的最小二乘解。**
+
+考虑一个线性最小二乘问题 ![[公式]](https://www.zhihu.com/equation?tex=Ax%3Db) ：
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Cmin_x%7C%7CAx-b%7C%7C_2%5E2) 
+
+给定矩阵 ![[公式]](https://www.zhihu.com/equation?tex=A%5Cin+R%5E%7Bm%5Ctimes+n%7D) 的一组SVD分解： ![[公式]](https://www.zhihu.com/equation?tex=A%3DU%5CSigma+V%5ET) 根据矩阵 ![[公式]](https://www.zhihu.com/equation?tex=U) 和 ![[公式]](https://www.zhihu.com/equation?tex=V) 的正交性，有
+
+![[公式]](https://www.zhihu.com/equation?tex=%7C%7CAx-b%7C%7C_2%5E2%3D%7C%7CU%5ET%28Ax-b%29%7C%7C_2%5E2%3D%7C%7CU%5ETAx-U%5ETb%7C%7C_2%5E2%3D%7C%7C%5CSigma+V%5ETx-U%5ETb%7C%7C_2%5E2) 
+
+另![[公式]](https://www.zhihu.com/equation?tex=z%3DV%5ETx) ，则有
+
+![[公式]](https://www.zhihu.com/equation?tex=%7C%7CAx-b%7C%7C_2%5E2%3D%7C%7C%5CSigma+V%5ETx-U%5ETb%7C%7C_2%5E2%3D%5Cdisplaystyle%5Csum_%7Bi%3D1%7D%5Er%28%5Csigma_iz_i-u_i%5ETb%29%5E2%2B%5Csum_%7Bi%3Dr%2B1%7D%5Em%28u_i%5ETb%29%5E2) 
+
+因此，
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Cmin_x%7C%7CAx-b%7C%7C_2%5E2%3D%5Cmin_x%28%5Cdisplaystyle%5Csum_%7Bi%3D1%7D%5Er%28%5Csigma_iz_i-u_i%5ETb%29%5E2%2B%5Csum_%7Bi%3Dr%2B1%7D%5Em%28u_i%5ETb%29%5E2%29) 
+
+显然，当 ![[公式]](https://www.zhihu.com/equation?tex=%5Csigma_iz_i%3Du_i%5ETb) 时，取最小，则最小二乘解为：
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+z_i%26%3D%5Cfrac%7Bu_i%5ETb%7D%7B%5Csigma_i%7D%2Ci%3D1%2C...%2Cr%5C%5C+z_i%26%3Darbitrary%2Ci%3Dr%2B1%2C...%2Cn+%5Cend%7Baligned%7D) 
+
+最小值为
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Cmin_x%7C%7CAx-b%7C%7C_2%5E2%3D%5Csum_%7Bi%3Dr%2B1%7D%5Em%28u_i%5ETb%29%5E2) 
+
+由![[公式]](https://www.zhihu.com/equation?tex=z%3DV%5ETx) ，可得 ![[公式]](https://www.zhihu.com/equation?tex=x%3DVz) ，因此，通过SVD来求线性最小二乘解的公式为
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+x%26%3DVz%5C%5C+z_i%26%3D%5Cfrac%7Bu_i%5ETb%7D%7B%5Csigma_i%7D%2Ci%3D1%2C...%2Cr%5C%5C+z_i%26%3Darbitrary%2Ci%3Dr%2B1%2C...%2Cn+%5Cend%7Baligned%7D) 
+
+在上式中我们发现，当 ![[公式]](https://www.zhihu.com/equation?tex=+r%3Dn) 时，有唯一最小二乘解，当 ![[公式]](https://www.zhihu.com/equation?tex=r%3Cn) 时，有无数最小二乘解，此时我们可求最小范数解：
+
+![[公式]](https://www.zhihu.com/equation?tex=%5Cbegin%7Baligned%7D+x_%5Cdagger%26%3DVz_%5Cdagger%5C%5C+z_i%5E%5Cdagger%26%3D%5Cfrac%7Bu_i%5ETb%7D%7B%5Csigma_i%7D%2Ci%3D1%2C...%2Cr%5C%5C+z_i%5E%5Cdagger%26%3D0%2Ci%3Dr%2B1%2C...%2Cn+%5Cend%7Baligned%7D) 
+
+我们知道最小二乘解也可通过 ![[公式]](https://www.zhihu.com/equation?tex=%28A%5ETA%29%5E%7B-1%7D%28A%5ETb%29) 来求解，而通过SVD求解的优点是不需要复杂的求逆运算，且可处理 ![[公式]](https://www.zhihu.com/equation?tex=A%5ETA) 为奇异阵不可逆的情况。
+
+
+
+**用svd主要是用于解决亏秩问题，以及可以选择少数奇异值，实现加速计算**
